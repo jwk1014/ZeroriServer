@@ -1,9 +1,10 @@
 name: CI/CD
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  workflow_dispatch:
+#  push:
+#    tags:
+#      - 'v*.*.*'
 
 # Need to Consider about permission
 # permissions:
@@ -65,13 +66,21 @@ jobs:
         docker build -t ${{ secrets.HOST_DEV }}/mozi-server:prod .
         docker push ${{ secrets.HOST_DEV }}/mozi-server:prod
     
+#    - name: Executing remote ssh commands using ssh key
+#      uses: appleboy/ssh-action@v0.1.6
+#      with:
+#        host: ${{ secrets.HOST_PROD }}
+#        username: ${{ secrets.USERNAME_PROD }}
+#        key: ${{ secrets.KEY_PROD }}
+#        script: sudo ./server-deploy.sh
+
     - name: Executing remote ssh commands using ssh key
-      uses: appleboy/ssh-action@v0.1.6
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.HOST_PROD }}
         username: ${{ secrets.USERNAME_PROD }}
         key: ${{ secrets.KEY_PROD }}
-        script: sudo ./server-deploy.sh
+        script: ./server-deploy.sh
   
   ## time
   current-time:
